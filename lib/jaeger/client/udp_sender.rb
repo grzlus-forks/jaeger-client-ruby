@@ -17,6 +17,7 @@ module Jaeger
 
       def start
         # Sending spans in a separate thread to avoid blocking the main thread.
+        Thread.abort_on_exception = true
         @thread = Thread.new do
           loop do
             emit_batch(@collector.retrieve)
@@ -38,7 +39,7 @@ module Jaeger
         batch = Jaeger::Thrift::Batch.new(
           'process' => Jaeger::Thrift::Process.new(
             'serviceName' => @service_name,
-            'tags' => [],
+            'tags' => []
           ),
           'spans' => thrift_spans
         )
